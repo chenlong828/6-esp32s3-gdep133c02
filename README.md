@@ -21,8 +21,11 @@ docs/preview/     机械图、原理图、image.h 解码图
 docs/reference/   官网在线转换器原页面与逆向 JS
 host/           上位机出图工具 e6_convert.py + samples/（示例 bin 与预览图）
 host/sd_bridge.py SD 卡上位机：浏览/校验/上传/下载/递归拉取
+host/discover.py  UDP 广播发现：自动找设备 IP / MAC / 主机名
 firmware/e6_epd/  固件工程（13.3" GDEP133C02，内嵌图开机直刷）
 firmware/sd_bridge/ SD 卡读写/传输固件（FATFS + USB 二进制协议）
+firmware/wifi_check/ WiFi 连通性测试（STA 连接 + DHCP 信息 + ping 网关）
+.env.example     WiFi 凭据模板（复制为 .env 填写；.env 不入库）
 vendor/         厂家原始示例源码（13.3" 参考设计 / 7.09" 双环境版）
 notes/          调研与分析笔记（产品参数、代码分析、出图链路、macOS 环境、板子体检）
 tools/          构建/烧录/备份脚本
@@ -65,6 +68,31 @@ DEST="backups/sdcard-$(date +%Y%m%d-%H%M%S)"
 
 写入使用临时文件 + CRC + 原子改名，目标已存在需 `--overwrite`；固件**绝不格式化**卡。细节与协议见 [`firmware/sd_bridge/README.md`](firmware/sd_bridge/README.md)，调试记录见 [`notes/sd-bridge.md`](notes/sd-bridge.md)。
 
+## WiFi 连通性测试
+
+`firmware/wifi_check` 是独立小工程：板子以 STA 连上指定 AP，打印 DHCP 下发的 IP / 掩码 / 网关 / DNS、STA MAC、BSSID、信道、RSSI，并对网关发 4 个 ICMP 包；断线自动退避重连，在线每 30 s 打一次 RSSI 心跳。它同时跑一个 UDP 发现服务（端口 3232），配合 `host/discover.py` 可在网段内自动找到设备。
+
+**凭据不进源码**：从仓库根 `.env` 读取，构建时由 CMake 生成 `build/esp-idf/main/wifi_secrets.h` 注入（`.env` 已在 `.gitignore` 中，改完直接重新编译会自动 reconfigure）。
+
+```bash
+cp .env.example .env          # 填 WIFI_SSID / WIFI_PASSWORD
+./tools/wifi-check.sh all     # build + flash + monitor（Ctrl+] 退出）
+
+./.venv/bin/python host/discover.py   # 广播找设备，打印 IP / MAC / 主机名
+```
+
+实测输出（示例 AP）：
+
+```
+I (1302) wifi:connected with your-ssid, aid = 2, channel 6, BW20, bssid = 00:11:22:33:44:55
+I (2862) wifi-check: DHCP 成功：IP=192.168.1.50 掩码=255.255.255.0 网关=192.168.1.1
+I (2972) wifi-check: STA MAC  : aa:bb:cc:dd:ee:ff
+I (2992) wifi-check: DNS(主): 192.168.1.1
+I (5002) wifi-check: ping 结果：4/4 回包，min/avg/max = 8/10/14 ms —— 网关可达
+```
+
+注意：WPA2 口令必须是 8–63 位（4 字符的口令 ESP32 无法完成握手）；密码会随代码编译进固件镜像，**不要外发 `build/` 或固件 bin**。细节见 [`firmware/wifi_check/README.md`](firmware/wifi_check/README.md)。
+
 ## 关键结论（详见 notes/）
 
 - **固件只认 960 000 字节裸数据**，旋转/缩放/抖动全部在上位机完成。
@@ -82,4 +110,5 @@ DEST="backups/sdcard-$(date +%Y%m%d-%H%M%S)"
 
 - ESP-IDF **v5.4.4**：`~/esp/esp-idf-v5.4.4`
 - Python 3.12（uv 管理）：仓库内 `.venv`（numpy / pillow / pyserial / esptool）
+- WiFi 凭据：仓库根 `.env`（模板 `.env.example`），构建时注入，不入库
 - 13.3" 厂家参考设计需 **IDF 4.4.4**（旧式 `component.mk`），需要原样编译时另装

@@ -12,3 +12,8 @@ host/samples/*.bin
 host/samples/*.h
 out/
 backups/
+
+# 本地凭据（WiFi 密码等），永不入库
+.env
+.env.*
+!.env.example
