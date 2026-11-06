@@ -1,4 +1,5 @@
 idf_component_register(
-    SRCS "main.c" "GDEB0709E01.c"
+    SRCS "main.c" "GDEP133C02.c"
     INCLUDE_DIRS "."
+    EMBED_FILES "assets/genshin01.bin"
 )

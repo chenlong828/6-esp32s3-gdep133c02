@@ -20,7 +20,7 @@ docs/           面板资料（规格书/设计须知/板级手册/原理图/烧
 docs/preview/     机械图、原理图、image.h 解码图
 docs/reference/   官网在线转换器原页面与逆向 JS
 host/           上位机出图工具 e6_convert.py + samples/（示例 bin 与预览图）
-firmware/e6_epd/  固件工程（当前以厂家 7.09" 示例为基线，待适配 13.3"）
+firmware/e6_epd/  固件工程（13.3" GDEP133C02，内嵌图开机直刷）
 vendor/         厂家原始示例源码（13.3" 参考设计 / 7.09" 双环境版）
 notes/          调研与分析笔记（产品参数、代码分析、出图链路、macOS 环境、板子体检）
 tools/          构建/烧录/备份脚本
@@ -29,13 +29,16 @@ tools/          构建/烧录/备份脚本
 ## 快速开始
 
 ```bash
+# 0) 首次碰板先整片备份（写进 backups/，不入库；详见 notes/backup.md）
+./tools/backup-factory.sh
+
 # 1) ESP-IDF（已装在 ~/esp/esp-idf-v5.4.4，工具在 ~/.espressif）
 . tools/env.sh   # 内含 export.sh + IDF_SKIP_CHECK_SUBMODULES
 
 # 2) 编译固件
 cd firmware/e6_epd && idf.py set-target esp32s3 && idf.py build
 
-# 3) 烧录（日志走 UART0，本板未引出；USB 上只有 ROM 日志）
+# 3) 烧录（日志走 USB-Serial-JTAG 二级控制台，可 idf.py monitor 直接看）
 idf.py -p /dev/cu.usbmodem1101 flash
 
 # 4) 上位机出图
@@ -48,7 +51,8 @@ idf.py -p /dev/cu.usbmodem1101 flash
 - **固件只认 960 000 字节裸数据**，旋转/缩放/抖动全部在上位机完成。
 - 抖动要对着**面板实测色**算误差（红 `160,32,32`、黄 `240,224,80`、蓝 `80,128,184`、绿 `96,128,80`），不是纯 RGB。
 - `images.bin` 格式：`"EPD6BIN\0" + u16 w + u16 h + u16 frames + u32 interval_ms + 帧数据`。
-- 板子现有固件是厂家 SD 播放版（Arduino 构建，IDF 5.5，2025-07-22），读 `/images.bin` 并解析头。
+- 出厂固件是厂家 SD 播放版（Arduino 构建，IDF 5.5，2025-07-22），读 `/images.bin`；已整片备份并覆盖为自编 13.3" 固件（见 `notes/backup.md`）。
+- 当前 `firmware/e6_epd` 把 `out/genshin01.bin` 内嵌进固件，开机直接刷屏、不读 SD；换图导出同格式 bin 后重新编译即可。
 - 6 色无灰阶，中间色靠空间抖动；可辨色约几百种，纯色块观感接近印刷，照片会显颗粒。
 
 ## 大文件策略
