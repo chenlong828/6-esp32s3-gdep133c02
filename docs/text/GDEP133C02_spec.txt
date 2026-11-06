@@ -1,0 +1,1426 @@
+
+=== page 1 ===
+13.3 inch 
+E-paper Display Series
+ GDEP133C02
+Dalian Good Display Co., Ltd. 
+GOODISPLAY
+
+=== page 2 ===
+Product Specifications 
+Customer 
+Standard 
+Description 
+13.3" E-PAPER DISPLAY
+Model Name 
+GDEP133C02
+Date 
+2024/05/30 
+Revision 
+1.0 
+Design Engineering 
+Approval 
+Check 
+Design 
+No.18, Zhonghua West ST,Ganjingzi DST,Dalian,CHINA
+Tel: +86-411-84619565
+Email: info@good-display.com 
+Website: www.good-display.com 
+GDEP133C02
+www.good-display.com
+2/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 3 ===
+ 
+CONTENTS 
+NO. 
+ITEM 
+PAGE 
+- 
+Cover 
+1 
+- 
+Product Specifications
+2 
+- 
+Contents 
+3 
+1 
+General Description 
+4 
+2 
+Features 
+4 
+3 
+Mechanical Specifications 
+4 
+4 
+Mechanical Drawing of EPD module 
+5 
+5 
+Input / Output Interface 
+6 
+6 
+Electrical Characteristics 
+10 
+7 
+Power Characteristics 
+21 
+8 
+Optical Characteristics 
+23 
+9 
+Handling, Safety, and Environment Requirements and Remark 
+25 
+10 
+Reliability Test 
+26 
+11 
+Block Diagram 
+27 
+12 
+Packing 
+28 
+13 
+Precautions 
+29 
+GDEP133C02
+www.good-display.com
+3/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 4 ===
+ 
+•
+High contrast electrophoretic imaging film
+•
+1200 x 1600 display
+•
+Ultra-wide viewing angle
+•
+Ultra-low power consumption
+•
+Pure reflective mode
+•
+Bi-stable
+•
+Landscape, portrait mode
+•
+Commercial temperature range: 0℃~50℃ 
+Parameter 
+Specifications 
+Unit 
+Remark 
+Screen Size 
+13.3 
+inch 
+150ppi 
+Display Resolution 
+1200(H) x 1600(V) 
+Pixel 
+3 : 4 
+Active Area 
+202.8 (H) x 270.4 (V) 
+Pixel Pitch 
+0.169 x 0.169 
+mm 
+Pixel Configuration 
+Square 
+Outline Dimension 
+208.8 (H) x 284.7 (V) x 0.85(D) 
+mm 
+Without 
+masking film 
+Module Weight 
+50 ± 10 
+g 
+Display operating mode 
+Reflective mode 
+FPL 
+E Ink Spectra 6 
+Surface treatment 
+Anti-glare treatment for protective sheet 
+GDEP133C02
+www.good-display.com
+4/29
+13.3 inch Series
+3. Mechanical Specifications 
+2. Features
+1. General Description
+DEP133C02 is a reflective electrophoretic E Ink® technology display module based on 
+active matrix TFT substrate. It has 13.3” active area with 1200 x 1600 pixels and 3 : 4 
+aspect ratios. The display is capable to display images at red/green/blue/yellow/black/
+white depending on the display controller and the associated waveform file it used.
+GOODISPLAY
+
+=== page 5 ===
+ 
+4. Mechanical Drawing of EPD Module
+GDEP133C02
+www.good-display.com
+5/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 6 ===
+ 
+5. Input / Output Interface
+5.1 Connector type
+196070-60041 (60 pin , 0.5pitch ) 
+5.2 Pin Assignment
+Pin Assignment 
+Pin Assignment 
+Pin # Type Single 
+Description 
+1 
+P 
+VCOMBD_M VCOMBD driving voltage (Master) 
+2 
+I 
+RESEC 
+Current sense input pin for the control loop.(VCOM) 
+3 
+O 
+GDRC 
+N-Channel MOSFET gate drive control.(VCOM)
+4 
+I 
+RESEN 
+Current sense input pin for the control loop. (VDDN) 
+5 
+O 
+GDRN 
+P-Channel MOSFET gate drive control pin. (VDDN)
+6 
+I 
+RESEP 
+Current sense input pin for the control loop. (VDDP) 
+7 
+O 
+GDRP 
+N-Channel MOSFET gate drive control pin. (VDDP)
+8 
+P 
+GND 
+Ground 
+9 
+P 
+AVDD 
+2.3~6V for analog voltage supply.(DC/DC) 
+10 
+P 
+VDD 
+2.3~3.6V for analog /digital voltage supply. 
+11 
+NC 
+No connection and do not connect with other NC pins 
+12 
+P 
+VCC 
+LDO output pin. 
+13 
+P 
+VDDP 
+Positive power supply for analog circuit. 
+14 
+P 
+VDDP 
+Positive power supply for analog circuit. 
+15 
+NC 
+No connection and do not connect with other NC pins 
+16 
+P 
+VDDN 
+Negative power supply for analog circuit. 
+17 
+P 
+VDDN 
+Negative power supply for analog circuit. 
+18 
+P 
+VCC1 
+Positive power supply only for Oscilltor. 
+19 
+P 
+VDDIO 
+Power input for IO. 
+20 
+I/O 
+TSCL 
+I2C Interface to digital temperature sensor Clock pin 
+21 
+I/O 
+TSDA 
+I2C Interface to digital temperature sensor Data pin 
+22 
+I 
+BS0 
+Input interface setting. Select 3 wire/ 4 wire/ Quad SPI interface.(Default :H) 
+23 
+I 
+BS1 
+Input interface setting. Select 3 wire/ 4 wire/ Quad SPI interface.(Default :H) 
+24 
+I 
+RES# 
+Reset. 
+25 
+O 
+BUSY_N 
+This pin indicates the driver status. Connect with a pull up resistor to VDDIO. 
+BUSY_N = “0”：Driver is busy, data/VCOM is transforming. 
+BUSY_N = “1”：Non-busy. Host side can send command/data to driver. 
+26 
+I 
+D/C# 
+Command/Data input. L: command H: data. (4-wire SPI). 
+Connect to GND in 3-wire mode or standard 4-wire mode. 
+GDEP133C02
+www.good-display.com
+6/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 7 ===
+ 
+27 
+I 
+CSB_M 
+Serial communication chip select.(Master) 
+28 
+I 
+SCL 
+Serial communication clock input. 
+29 
+I/O 
+SI0 
+Serial communication data input/output (3-wire/4-wire SPI). 
+Serial communication data input (Standard 4-wire SPI). 
+30 
+I/O 
+SI1 
+Serial communication data input. Serial communication data output. 
+(Standard 4-wire SPI). 
+31 
+I 
+SI2 
+Serial communication data input. (Standard 4-wire SPI Quad mode) 
+32 
+I 
+SI3 
+Serial communication data input. (Standard 4-wire SPI Quad mode) 
+33 
+O 
+DRVP_Gate Driving external N-MOSFET(VGP) 
+34 
+I 
+FBP 
+Positive charge pump(VGP) feedback pin. 
+35 
+P 
+GND 
+Ground 
+36 
+O 
+VCOMBD_S VCOMBD driving voltage (Slave) 
+37 
+O 
+DRVN 
+Driving external BTJ. (VGN) 
+38 
+I 
+FBN 
+Negative charge pump feedback pin. (VGN) 
+39 
+O 
+REG_VGN 
+VGN internal reference voltage output. 
+40 
+O 
+DRVN2 
+Driving external BTJ. (VNCP_3P5V) 
+41 
+P 
+VNCP_3P5V Negative power supply for analog bias1 circuit. (for TFT_Vcom) 
+42 
+P 
+VSPH 
+Positive source buffer output. 
+43 
+P 
+VSPL 
+Positive source buffer output. 
+44 
+P 
+VSPL2 
+Positive source buffer output. 
+45 
+P 
+VSPHI 
+Positive source voltage. 
+46 
+P 
+VSPLI 
+Positive source voltage. 
+47 
+P 
+VSPL2I 
+Positive source voltage. 
+48 
+P 
+VSNH 
+Negative source buffer output. 
+49 
+P 
+VSNL 
+Negative source buffer output. 
+50 
+P 
+VSNL2 
+Negative source buffer output. 
+51 
+P 
+VSNL2I 
+Negative source voltage. 
+52 
+P 
+VSNLI 
+Negative source voltage. 
+53 
+P 
+VSNHI 
+Negative source voltage. 
+54 
+O 
+FPL_VCOM FPL_VCOM driving voltage 
+55 
+O 
+TFT_VCOM TFT_VCOM driving voltage 
+56 
+P 
+VBB_3P5V 
+Negative power supply for analog bias2 circuit. (for TFT_Vcom) 
+57 
+- 
+NC 
+No connection and do not connect with other NC pins 
+58 
+I 
+CSB_S 
+Serial communication chip select.(Slave) 
+59 
+P 
+VGH 
+Positive Gate driving voltage 
+60 
+P 
+VGL 
+Negative Gate driving voltage 
+GDEP133C02
+www.good-display.com
+7/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 8 ===
+ 
+Note 5-1: This pin (CSB) is the chip select input connecting to the MCU. The chip is 
+enabled for MCU communication only when CSB is pulled Low. 
+Note 5-2: This pin (D/C#) is Data/Command control pin connecting to the MCU. When the 
+pin is pulled HIGH, the data will be interpreted as data. When the pin is pulled Low, the 
+data will be interpreted as command. 
+Note 5-3: This pin (RES#) is reset signal input.  The Reset is active Low. 
+Note 5-4: This pin (BUSY_N) is Busy state output pin. When Busy is low, the operation of 
+chip should not be interrupted and any commands should not be issued to the module. 
+The driver IC will put Busy pin low when the driver IC is working such as:  
+- 
+Outputting display waveform; or
+- 
+Programming with OTP
+- 
+Communicating with digital temperature sensor
+Note 5-5: This pin (BS0/BS1) is for 3-line SPI /4-line SPI/QSPI selection. Please refer to 
+below Table.
+Table: Bus interface selection 
+BS1 
+BS0 
+MPU Interface
+L 
+L 
+3-lines serial peripheral interface (SPI) – 9 bits SPI
+L 
+H 
+4-lines serial peripheral interface (SPI)
+H 
+L 
+Standard 4-wire SPI 
+H 
+H 
+Standard 4-wire SPI (Default) 
+GDEP133C02
+www.good-display.com
+8/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 9 ===
+ 
+5.3 Panel Scan Directions
+GDEP133C02
+www.good-display.com
+9/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 10 ===
+ 
+Parameter 
+Symbol 
+Rating 
+Unit 
+Analog power 
+VDD 
+-0.5 to +3.6
+V 
+Operating Temp. range 
+TOPR 
+0 to +50 
+℃ 
+Storage Temp. range 
+TSTG 
+-25 to +50
+℃ 
+Note: Maximum ratings are those values beyond which damages to the device may 
+occur. Functional operation should be restricted to the limits in the Electrical 
+Characteristics chapter. 
+GDEP133C02
+www.good-display.com
+10/29
+13.3 inch Series
+6. Electrical Characteristics
+6.1 Absolute Maximum Ratings:
+GOODISPLAY
+
+=== page 11 ===
+ 
+6.2 Display Module DC characteristics
+The following specifications apply for: VDD = 3.3V, TA = 25℃ 
+DIGITAL DC CHARACTERISTICS 
+Symbol 
+Parameter 
+Conditions 
+MIN. 
+TYP. 
+MAX. 
+Unit 
+VDD 
+Logic supply voltage 
+2.4 
+3.3 
+3.6 
+V 
+VGH 
+Positive Gate driving 
+voltage 
+26 
+27 
+28 
+V 
+VGL 
+Negative Gate driving 
+voltage 
+-21
+-20
+-19
+V 
+VSPH 
+Positive source driving 
+voltage 1 
+-- 
+Adjusted 
+-- 
+V 
+VSPH2 
+Positive source driving 
+voltage 2 
+-- 
+Adjusted 
+-- 
+V 
+VSNH 
+Negative source driving 
+voltage 1 
+-- 
+Adjusted 
+-- 
+V 
+VSNH2 
+Negative source driving 
+voltage 2 
+-- 
+Adjusted 
+-- 
+V 
+VCOM_DC 
+VCOM_DC output 
+voltage 
+-4.0
+Adjusted 
+-0.3
+V 
+VIL 
+Low level input voltage 
+Digital input pins 
+GND 
+-- 
+0.2xVDD 
+V 
+VIH 
+High level input voltage 
+Digital input pins 
+0.8XVDD 
+-- 
+VDD 
+V 
+VOH 
+High level output voltage 
+Digital output pins,  
+IOUT = 1 mA,VDD = 2.4V 
+0.8xVDD 
+-- 
+-- 
+V 
+VOL 
+Low level output voltage 
+Digital output pins, 
+IOUT = 1 mA,VDD = 2.4V 
+GND 
+-- 
+0.2xVDD 
+V 
+IMSTB 
+Module stand-by current 
+Stand-by mode 
+-- 
+6.58 
+-- 
+uA 
+IMDS 
+Module deep sleep 
+current 
+Deep sleep mode 
+-- 
+0.70 
+-- 
+uA 
+INC 
+Inrush Current 
+Booster on 
+-- 
+641.6 
+844.5 
+mA 
+IPC 
+Driving Peak Current 
+TYP Loading Pattern 
+-- 
+622.4 
+871.2 
+mA 
+High Loading Pattern 
+-- 
+700.8 
+987.4 
+mA 
+IMOPR 
+Module operating current 
+TYP Loading Pattern 
+-- 
+45.5 
+58.1 
+mA 
+High Loading Pattern 
+-- 
+355.2 
+511.5 
+mA 
+P 
+Operation Power 
+Dissipation 
+TYP Loading Pattern 
+VDD=3.3V with DC-DC 
+-- 
+150.2 
+191.8 
+mW 
+High Loading Pattern 
+VDD=3.3V with DC-DC 
+-- 
+1172.2 
+1688.0 
+mW 
+PSTBY 
+Standby Power 
+Dissipation 
+VDD=3.3V 
+-- 
+0.876 
+-- 
+uW 
+ 
+  
+ 
+  
+Note: The Module operating current data is measured by using Oscilloscope, and extract the 
+Mean value.
+-The typical power consumption is measured using associated 25C waveform with following
+pattern transition:
+from full white pattern to color stripe pattern. (Note 7-1)
+The high loading power consumption is measured using associated 25C waveform with following
+pattern
+GDEP133C02
+www.good-display.com
+11/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 12 ===
+ 
+Note: The Module operating current data is measured by using Oscilloscope, and extract 
+the Mean value.
+-The typical power consumption is measured using associated 25C waveform with 
+following pattern transition:
+from full white pattern to color stripe pattern. (Note 7-1) 
+-The high loading power consumption is measured using associated 25C waveform with 
+following pattern transition: from full white pattern to noise pattern (including random 
+scattering of 4 colors) (Note 7-2) 
+Note 6-1 
+The typical power consumption 
+Note 6-2 
+The high loading power consumption 
+GDEP133C02
+www.good-display.com
+12/29
+13.3 inch Series
+- The minimum VDD value by 2.4V is based on typical application pattern with stable and 
+continuing power supply. It does not apply on high loading pattern such as Note 7-2.
+- The listed electrical/optical characteristics are only guaranteed under the controller & 
+waveform provided by E Ink
+- Vcom value has been set in the IC chip on the panel.
+- Issue the command 0x07 with data 0xA5 to let EPD enter deep sleep mode.
+GOODISPLAY
+
+=== page 13 ===
+ 
+Pin Name 
+Bus Selection 
+Data/Command Interface 
+Control Signal 
+Bus 
+interface 
+BS0 
+BS1 
+SDA 
+SCL 
+CS# 
+D/C# 
+RES# 
+3-wire SPI
+L 
+L 
+SDIN/OUT 
+SCLK 
+CS# 
+N/A 
+RES# 
+4-wire SPI
+H 
+L 
+SDIN/OUT 
+SCLK 
+CS# 
+L：Command Input 
+H：Data Input 
+RES# 
+Standard 
+4-wire SPI
+H 
+H 
+MOSI：SDOUT 
+MISO：SDIN 
+SCLK 
+CS# 
+N/A 
+RES# 
+Table 6-1: MCU interface assignment under different bus interface mode
+GDEP133C02
+www.good-display.com
+13/29
+13.3 inch Series
+6.3 Panel AC Characteristics
+6.3.1 MCU Interface
+6.3.1.1 MCU Interface Selection
+In this module, there are 3-wire SPI, 4-wire SPI and standard 4-wire SPI that can 
+communicate with MCU. The MCU interface mode can be set by hardware selection on BS0 
+and BS1 pins. Please refer to the following table to select the bus interface. 
+Note 6-3: L is connected to GND 
+Note 6-4: H is connected to VDD 
+GOODISPLAY
+
+=== page 14 ===
+ 
+6.3.1.2 MCU Serial Interface (4-wire SPI)
+The 4-wire SPI consists of serial clock SCLK, serial data SDA, D/C#, CS#. 
+Table 6-2: Control pins of 4-wire Serial Peripheral interface 
+Note 6-5: ↑stands for rising edge of signal 
+SDA is shifted into an 8-bit shift register in the order of D7, D6, ... D0. The data byte in 
+the shift register is written to the Graphic Display Data RAM (RAM) or command register in 
+the same clock. Under serial mode, only write operations are allowed.  
+Figure 6-1: Write procedure in 4-wire Serial Peripheral Interface mode 
+Function 
+CS# 
+D/C# 
+SCLK 
+Write Command 
+L 
+L 
+↑ 
+Write data 
+L 
+H 
+↑ 
+GDEP133C02
+www.good-display.com
+14/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 15 ===
+ 
+6.3.1.3 MCU Serial Interface (3-wire SPI)
+The 3-wire serial interface consists of serial clock SCLK, serial data SDA and CS#. 
+In 3-wire SPI mode, the pin D/C# can be connected to an external ground. 
+The operation is similar to 4-wire serial interface while D/C# pin is not used. There are 
+altogether 9-bits will be shifted into the shift register on every ninth clock in sequence: D/
+C# bit, D7 to D0 bit. The D/C# bit (first bit of the sequential data) will determine the 
+following data byte in shift register is written to the Display Data RAM (D/C# bit = 1) or 
+the command register (D/C# bit = 0).Under serial mode, only write operations are 
+allowed. 
+Table 6-3: Control pins of 3-wire Serial Peripheral Interface 
+Note 6-6: ↑stands for rising edge of signal 
+Figure 6-2: Write procedure in 3-wire Serial Peripheral Interface mode 
+Function 
+CS# 
+D/C# 
+SCLK 
+Write Command 
+L 
+Tied to GND 
+↑ 
+Write data 
+L 
+Tied to GND 
+↑ 
+GDEP133C02
+www.good-display.com
+15/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 16 ===
+ 
+6.3.2 Timing Characteristics of Series Interface 
+6.3.2.1 3-wire SPI
+6.3.2.2 4-wire SPI
+Figure：4-wire Serial Interface 
+GDEP133C02
+www.good-display.com
+16/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 17 ===
+ 
+6.3.2.3 Starnard 4-wire SPI
+Figure：Standard 4 pin serial interface protocol 
+GDEP133C02
+www.good-display.com
+17/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 18 ===
+ 
+Table 3-wire Timing Table 
+Parameter 
+Symbol 
+Min 
+Typ 
+Max Unit 
+condition 
+SERIAL COMMUNICATION 
+CSB 
+Tcss 
+60 
+ns 
+Chip select setup time 
+Tcsh 
+65 
+ns 
+Chip select hold time 
+Tscc 
+20 
+ns 
+Chip select setup time 
+Tchw 
+40 
+ns 
+Chip select setup time 
+SCL 
+Tscycw 
+50 
+ns 
+Serial clock cycle (Write) 
+Tshw 
+25 
+ns 
+SCL “H” pulse width (Write) 
+Tslw 
+25 
+ns 
+SCL “L” pulse width (Write) 
+Tscysr 
+150 
+ns 
+Serial clock cycle (Read) 
+Tshr 
+60 
+ns 
+SCL “H” pulse width (Read) 
+Tslr 
+60 
+ns 
+SCL “L” pulse width (Read) 
+TSCYC_CM
+D_PAR
+150 
+ns 
+Serial 
+clock 
+cycle 
+(Between 
+command and 1st parameter) 
+SDA 
+Tsds 
+30 
+ns 
+Data setup time 
+Tsdh 
+30 
+ns 
+Data hold time 
+TACC 
+140 
+ns 
+Access time 
+BUSY_N 
+TBYS 
+150 
+ns 
+BUSY_N setup time 
+GDEP133C02
+www.good-display.com
+18/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 19 ===
+ 
+Table 4-wire Timing Table 
+Parameter 
+Symbol Min 
+Typ 
+Max 
+Unit 
+condition 
+SERIAL COMMUNICATION 
+CSB 
+Tcss 
+60 
+ns 
+Chip select setup time 
+Tcsh 
+65 
+ns 
+Chip select hold time 
+Tscc 
+20 
+ns 
+Chip select setup time 
+Tchw 
+40 
+ns 
+Chip select setup time 
+SCL 
+Tscycw 
+50 
+ns 
+Serial clock cycle (Write) 
+Tshw 
+25 
+ns 
+SCL “H” pulse width (Write) 
+Tslw 
+25 
+ns 
+SCL “L” pulse width (Write) 
+Tscysr 
+150 
+ns 
+Serial clock cycle (Read) 
+Tshr 
+60 
+ns 
+SCL “H” pulse width (Read) 
+Tslr 
+60 
+ns 
+SCL “L” pulse width (Read) 
+TSCYC_C
+MD_PAR
+150 
+ns 
+Serial clock cycle (Between command 
+and 1st parameter) 
+SDA 
+Tsds 
+30 
+ns 
+Data setup time 
+Tsdh 
+30 
+ns 
+Data hold time 
+TACC 
+140 
+ns 
+Access time 
+BUSY_N 
+TBYS 
+150 
+ns 
+BUSY_N setup time 
+GDEP133C02
+www.good-display.com
+19/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 20 ===
+ 
+Table standard 4-wire Timing Table 
+Parameter 
+Symbol 
+Min 
+Typ 
+Max 
+Unit 
+condition 
+SERIAL COMMUNICATION 
+CSB 
+Tcss 
+60 
+ns 
+Chip select setup time 
+Tcsh 
+65 
+ns 
+Chip select hold time 
+Tscc 
+20 
+ns 
+Chip select setup time 
+Tchw 
+40 
+ns 
+Chip select setup time 
+SCL 
+Tscycw 
+50 
+ns 
+Serial clock cycle (Write) 
+Tshw 
+25 
+ns 
+SCL “H” pulse width (Write) 
+Tslw 
+25 
+ns 
+SCL “L” pulse width (Write) 
+Tscysr 
+150 
+ns 
+Serial clock cycle (Read) 
+Tshr 
+60 
+ns 
+SCL “H” pulse width (Read) 
+Tslr 
+60 
+ns 
+SCL “L” pulse width (Read) 
+TSCYC_C
+MD_PAR
+150 
+ns 
+Serial clock cycle (Between 
+command and 1st parameter) 
+MOSI 
+MISO 
+Tsds 
+30 
+ns 
+Data setup time 
+Tsdh 
+30 
+ns 
+Data hold time 
+TACC 
+140 
+ns 
+Access time 
+BUSY_N 
+TBYS 
+150 
+ns 
+BUSY_N setup time 
+GDEP133C02
+www.good-display.com
+20/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 21 ===
+ 
+7. Power Characteristics 
+Power ON Sequence 
+GDEP133C02
+www.good-display.com
+21/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 22 ===
+ 
+Power OFF Sequence 
+GDEP133C02
+www.good-display.com
+22/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 23 ===
+ 
+8. Optical Characteristics
+8.1 Specifications
+Symbol 
+Parameter 
+Conditio
+ns 
+Temperature 
+Min 
+Typ. 
+Max 
+Unit 
+Note 
+R 
+Reflectance 
+White 
+25
+oC 
+30 
+34 
+- 
+% 
+Note 8-1 
+CR 
+Contrast Ratio 
+- 
+25
+oC 
+15 
+22 
+- 
+- 
+- 
+Tupdate
+Update time 
+- 
+25
+oC 
+- 
+12 
+- 
+sec 
+- 
+Symbol 
+Parameter 
+Conditio
+ns 
+Temperature 
+L* Typ. 
+a* 
+Typ. 
+b* 
+Typ. 
+△E2000
+Max.
+Note 
+WS 
+White State L*/a*/b* 
+value 
+White 
+25
+oC 
+66.5 
+-4
+0 
+6 
+Note 8-1 
+DS 
+Dark State L*/a*/b* 
+value 
+Dark 
+25
+oC 
+12 
+7 
+-11
+6 
+Note 8-1 
+RS 
+Red State L*/a*/b* 
+value 
+Red 
+25
+oC 
+26.5 
+41 
+30 
+6 
+Note 8-1 
+YS 
+Yellow State 
+L*/a*/b* value 
+Yellow 
+25
+oC 
+62 
+-11
+65 
+6 
+Note 8-1 
+BS 
+Blue State L*/a*/b* 
+value 
+Blue 
+25
+oC 
+34 
+3.5 
+-37
+6 
+Note 8-1 
+GS 
+Green State L*/a*/b* 
+value 
+Green 
+25
+oC 
+35 
+-22
+15 
+8 
+Note 8-1 
+WS: White state, DS: Dark state, RS: Red state, YS: Yellow state, BS: Blue state, 
+GS: Green state Note 8-1：Luminance meter：Eye - One Pro3 plus 
+Spectrophotometer 
+GDEP133C02
+www.good-display.com
+23/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 24 ===
+ 
+8.2 Definition of contrast ratio
+The contrast ratio (CR) is the ratio between the reflectance in a full white area (Rl) and 
+the reflectance in a dark area (Rd)： 
+CR = Rl/Rd 
+Light Sour
+s in a ring
+°
+5
+4
+°
+5
+4
+r
+o
+tc
+e
+t
+e
+D
+EPD Sample
+e
+c
+ 
+8.3 Reflection Ratio
+The reflection ratio is expressed as： 
+R = Reflectance Factorwhite board  x  ( Lcenter / Lwhite board ) 
+Lcenter is the luminance measured at center in a white area (R=G=B=1). Lwhite board 
+is the luminance of a standard white board. Both are measured with equivalent 
+illumination source. The viewing angle shall be no more than 2 degrees. 
+GDEP133C02
+www.good-display.com
+24/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 25 ===
+CAUTION 
+The display module should not be exposed to harmful gases, such as acid and 
+alkali gases, which corrode electronic components. 
+Disassembling the display module can cause permanent damage and invalidate 
+the warranty agreements. 
+Observe general precautions that are common to handling delicate electronic 
+components. The glass can break and front surfaces can easily be damaged. Moreover 
+the display is sensitive to static electricity and other rough environmental conditions. 
+Data sheet status 
+Product specification The data sheet contains final product specifications. 
+Limiting values 
+Limiting values given are in accordance with the Absolute Maximum Rating System 
+(IEC 134). 
+Stress above one or more of the limiting values may cause permanent damage to 
+the device. 
+These are stress ratings only and operation of the device at these or any other 
+conditions above those given in the Characteristics sections of the specification is 
+not implied. Exposure to limiting values for extended periods may affect device 
+reliability. 
+Application information 
+Where application information is given, it is advisory and dose not form part of 
+the specification. 
+Product Environmental certification 
+RoHS 
+WARNING 
+The display glass may break when it is dropped or bumped on a hard surface. 
+Handle with care. 
+Should the display break, do not touch the electrophoretic material.  In case of 
+contact  with electrophoretic material, wash with water and soap. 
+9. Handling, Safety and Environmental Requirements
+GDEP133C02
+www.good-display.com
+25/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 26 ===
+ 
+10. Reliability Test
+TEST 
+CONDITION 
+REMARK 
+1 
+High Temperature Storage 
+T = 60℃35% RH, 240Hrs
+(Test in White pattern) 
+2 
+Low Temperature Storage 
+T = -25℃, 240Hrs
+(Test in White pattern) 
+3 
+High Temperature 
+Operation 
+T = 50°℃30% RH, 240Hrs
+4 
+Low Temperature Operation 
+T = 0℃, 240Hrs
+5 
+High-Temperature, High-
+Humidity Operation 
+T = +40℃, RH = 90%, 240Hrs 
+6 
+High Temperature, High- 
+Humidity Storage 
+T = 60℃ 80% RH, 240Hrs 
+(Test in White Pattern) 
+7 
+Heat Shock 
+-25℃(30 min) ~60℃(30 min)
+50 cycle, 1Hr/cycle 
+(Test in White pattern) 
+8 
+Electrostatic Discharge 
+(Machine model) +/- 200V ; 0Ω, 200pF 
+Non-operation 
+Actual EMC level to be measured on customer application. 
+Note：The protective film must be removed before temperature test. 
+< Criteria > 
+In the standard conditions, there is not display function NG issue occurred. 
+All the cosmetic specification is judged before the reliability stress. 
+GDEP133C02
+www.good-display.com
+26/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 27 ===
+ 
+11. Block Diagram
+GDEP133C02
+www.good-display.com
+27/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 28 ===
+ 
+12. Packing 
+Packing Drawing 
+GDEP133C02
+www.good-display.com
+28/29
+13.3 inch Series
+GOODISPLAY
+
+=== page 29 ===
+(1)
+Do not apply pressure to the EPD panel in order to prevent damaging it.
+(2)
+Do not connect or disconnect the interface connector while the EPD panel is in operation.
+(3)
+Do not touch IC bonding area. It may scratch TFT lead or damage IC function.
+(4)
+Please be mindful of moisture to avoid its penetration into the EPD panel, which m
+13. Precautions
+ay
+cause damage during operation.
+(5)
+If the EPD Panel / Module is not refreshed every 24 hours, a phenomena known as
+“Ghosting” or “Image Sticking” may occur. It is recommended to refreshed the ESL /
+EPD Tag every 24 hours in use case. It is recommended that customer ships or stores the
+ESL / EPD Tag with a completely white image to avoid this issue
+(6)
+High temperature, high humidity, sunlight or fluorescent light may degrade the EPD
+panel’s performance. Please do not expose the unprotected EPD panel to high
+temperature, high humidity, sunlight, or fluorescent for long periods of time.
+GDEP133C02
+www.good-display.com
+29/29
+13.3 inch Series
+GOODISPLAY

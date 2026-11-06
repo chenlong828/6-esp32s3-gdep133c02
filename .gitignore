@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+build/
+sdkconfig.old
+managed_components/
+docs/*.pdf
+docs/*.zip
+docs/preview/
+host/samples/*.bin
+host/samples/*.h
+out/

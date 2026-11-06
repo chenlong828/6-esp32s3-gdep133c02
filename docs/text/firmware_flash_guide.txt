@@ -1,0 +1,156 @@
+
+=== page 1 ===
+ESP32 固件烧录操作文档
+Flash Download Tool 3.9.6
+Dalian Good Display Co., Ltd.
+GOODISPLAY
+
+=== page 2 ===
+1. 文档概述
+本指南详细介绍了如何使用E
+ spressif Flash Download Tool 版本3.9.6 将固件烧
+录到E
+ SP32 微控制器。该工具支持E
+ SP32 芯片类型，主要通过UART 接口进
+行烧录。适用于开发（Develop 模式）和生产（Factory 模式）场景。版本3.9.6
+的特定功能（如c
+ hipInfoDump 标签）可能与更高版本（如>
+ = 3.9.8）略有差异，
+但核心烧录功能完全兼容。
+注意：烧录前请备份重要数据，避免意外擦除闪存。确保固件文件为. bin 格式。
+2. 准备工作
+硬件要求
+
+1 个E
+ SP32E6-E01 或者ESP32133-C02 模块（用于烧录固
+件）。
+
+1 台运行Windows 7（64 位）或Windows 10 的PC。
+
+USB 转串口适配器（用于连接E
+ SP32 的UART 接口）。
+软件要求
+
+Flash Download Tool 版本3
+ .9.6（双击. exe 文件启动）。
+
+准备好固件文件（.bin 格式，例如bootloader、分区表和应用固
+件）。
+3. 工具界面介绍
+3.1 启动工具（双击. exe 文件）后，主界面会出现。主要元素包括：
+
+ChipType：选择芯片类型（本指南选择
+E
+ 
+SP32S3）。
+
+WorkMode：工作模式选择。
+o
+Develop 模式：使用绝对路径，适用于单芯片开发烧录。
+o
+Factory 模式：使用相对路径（建议将固件置于与. exe 同级的b
+ in 文件夹
+中）。界面默认锁定，点击L
+ ockSettings 解锁编辑。关闭工具时配置会本地
+保存。
+
+LoadMode：仅支持UART 通信模式。
+Flash Download Tool
+www.good-display.cn
+2/5
+ESP32 固件烧录操作文档
+GOODISPLAY
+
+=== page 3 ===
+3.2 选择选项后，点击OK 进入相应标签页：
+
+Develop 模式：进入S
+ PIDownload 标签页。
+
+Factory 模式：进入F
+ actoryMultiDownload 标签页。
+SPIDownload 标签页（Develop 模式）
+用于开发环境的标准烧录。主要分为三个部分：
+
+D
+  ownload Path Config（下载路径配置）：配置固件路径和下载地址（十六进制格式，
+例如0
+ x1000）。勾选路径前的复选框以包含该文件。可添加多个文件（如bootloader
+在0x1000、分区表在0x8000、应用在0x10000）。
+
+SPI Flash Config（SPI 闪存配置）：
+o
+SPI SPEED：设置S
+ PI 启动速率（例如4
+ 0 MHz；常见值：20 MHz、40 MHz 或
+80 MHz，取决于闪存芯片）。
+o
+SPI MODE：设置S
+ PI 启动模式（例如DIO、QIO；ESP32 默认QIO）。
+o
+DETECTED INFO：下载开始后自动显示检测到的闪存和晶振信息。
+o
+DoNotChgBin：启用时，直接烧录. bin 文件原始内容；禁用时，根据S
+ PI SPEED
+和MODE 更新固件后再烧录。
+o
+CombineBin
+按钮：将所有选中的固件合并为一个文件（保存
+为. /combine/target.bin）。启用DoNotChgBin 时合并原始文件；否则应用S
+ PI
+配置。文件间未用区域填充0
+ xff。每次点击会覆盖之前文件。
+o
+Default 按钮：恢复S
+ PI 配置为默认值（ESP32 标准设置）。
+
+Download Panel（下载面板）：
+o
+S
+  TART：开始烧录。
+Flash Download Tool
+www.good-display.cn
+3/5
+ESP32 固件烧录操作文档
+GOODISPLAY
+
+=== page 4 ===
+o
+S
+  TOP：停止下载。
+o
+E
+  RASE：擦除整个闪存（谨慎使用，避免数据丢失）。
+o
+C
+  OM：选择串口（例如COM3）。
+o
+B
+  AUD：设置波特率（例如1
+ 15200；更高波特率如9
+ 21600 可加速，但需稳
+定连接）。
+注意：我司会提供打包好的BIN 文件，所以只添加打包好的bin 文件，偏移量填写0x00 即
+可，端口和波特率设置好，点击START 即可烧录
+Flash Download Tool
+www.good-display.cn
+4/5
+ESP32 固件烧录操作文档
+GOODISPLAY
+
+=== page 5 ===
+4. 烧录过程
+常规下载（ESP32 示例）
+1）完成上述配置。
+2）在S
+ PIDownload 或F
+ actoryMultiDownload 标签页，点击S
+ TART。
+3）工具通过UART 连接，检测闪存信息和MAC 地址，然后烧录固件到指定地址。
+4）监控界面进度。完成后显示“
+ FINISH/完成”
+Flash Download Tool
+www.good-display.cn
+5/5
+ESP32 固件烧录操作文档
+GOODISPLAY
