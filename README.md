@@ -20,7 +20,9 @@ docs/           面板资料（规格书/设计须知/板级手册/原理图/烧
 docs/preview/     机械图、原理图、image.h 解码图
 docs/reference/   官网在线转换器原页面与逆向 JS
 host/           上位机出图工具 e6_convert.py + samples/（示例 bin 与预览图）
+host/sd_bridge.py SD 卡上位机：浏览/校验/上传/下载/递归拉取
 firmware/e6_epd/  固件工程（13.3" GDEP133C02，内嵌图开机直刷）
+firmware/sd_bridge/ SD 卡读写/传输固件（FATFS + USB 二进制协议）
 vendor/         厂家原始示例源码（13.3" 参考设计 / 7.09" 双环境版）
 notes/          调研与分析笔记（产品参数、代码分析、出图链路、macOS 环境、板子体检）
 tools/          构建/烧录/备份脚本
@@ -45,6 +47,23 @@ idf.py -p /dev/cu.usbmodem1101 flash
 ./.venv/bin/python host/e6_convert.py photo.jpg --fit cover --dither fs-ser \
     -o out/photo.bin --header out/photo_image.h --preview out/photo.png
 ```
+
+## SD 卡读写 / 导出
+
+板载 microSD 走 SPI3（CS=15 / MOSI=3 / MISO=5 / SCK=8），`firmware/sd_bridge` 把它挂成 FATFS，通过 USB-Serial/JTAG 暴露文件协议；不拆卡、不格式化即可整卡导出或写入。
+
+```bash
+# 烧 SD 桥固件（会覆盖当前显示固件；e6_epd 工程未改动，可随时烧回）
+cd firmware/sd_bridge && idf.py build && idf.py -p /dev/cu.usbmodem1101 flash
+
+# 看卡、算 CRC、整卡拉取
+./.venv/bin/python host/sd_bridge.py info
+./.venv/bin/python host/sd_bridge.py crc /images.bin
+DEST="backups/sdcard-$(date +%Y%m%d-%H%M%S)"
+./.venv/bin/python host/sd_bridge.py pull / "$DEST" --skip-errors --manifest "$DEST-manifest.json"
+```
+
+写入使用临时文件 + CRC + 原子改名，目标已存在需 `--overwrite`；固件**绝不格式化**卡。细节与协议见 [`firmware/sd_bridge/README.md`](firmware/sd_bridge/README.md)，调试记录见 [`notes/sd-bridge.md`](notes/sd-bridge.md)。
 
 ## 关键结论（详见 notes/）
 
