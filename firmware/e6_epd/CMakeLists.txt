@@ -2,4 +2,4 @@ cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-project(gdeb0709e01_demo)
+project(e6_epd)

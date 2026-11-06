@@ -30,7 +30,7 @@ tools/          构建/烧录/备份脚本
 
 ```bash
 # 1) ESP-IDF（已装在 ~/esp/esp-idf-v5.4.4，工具在 ~/.espressif）
-. ~/esp/esp-idf-v5.4.4/export.sh
+. tools/env.sh   # 内含 export.sh + IDF_SKIP_CHECK_SUBMODULES
 
 # 2) 编译固件
 cd firmware/e6_epd && idf.py set-target esp32s3 && idf.py build
