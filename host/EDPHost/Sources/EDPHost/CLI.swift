@@ -57,13 +57,14 @@ enum CLI {
               --fit cover|contain|stretch        （默认 cover）
               --dither fs-ser|fs|atkinson|stucki|jjn|none （默认 fs-ser）
               --strength 0..1                    （默认 1.0）
-              --crop x,y,w,h                     归一化裁切框（相对旋转后的图，0…1）
+              --crop x,y,w,h                     归一化裁切框（相对旋转后的图）
+              --overscan                         允许裁切框超出原图，超出部分填白
               --frame-only                       只写 960000 B 帧数据
           --crc32 <file>
           --api-selftest <http://host:port>  对（真机或 mock）跑一遍完整 HTTP 流程
-          --render-crop <in> <out.png> [w h] [rotate]
+          --render-crop <in> <out.png> [w h] [rotate] [overscan 1|0]
                                             离屏渲染裁切编辑器（调试用）
-          --selftest-crop                   裁切几何自检（比例 / 旋转映射）
+          --selftest-crop                   裁切几何自检（比例 / 旋转映射 / 白边）
           --oneclick-selftest <image> <ip>  无界面跑一遍“一键生成并上传”（真机联调用）
         """)
     }
@@ -147,6 +148,8 @@ enum CLI {
             case "--crop":
                 i += 1
                 crop = parseCrop(args[safe: i])
+            case "--overscan":
+                settings.allowOverscan = true
             case "--frame-only":
                 frameOnly = true
             default:
@@ -312,10 +315,113 @@ enum CLI {
         expect("四次 90° 回原位 x", rect.minX, 0.1, tolerance: 1e-9)
         expect("四次 90° 回原位 y", rect.minY, 0.2, tolerance: 1e-9)
 
+        /* 4) 开关决定默认框：关（默认）只能落在画面内，开则完整包住整图 */
+        let wide = CGSize(width: 1600, height: 900)                  // 16:9
+        let wideAspect = CropMath.frameAspect(rotate: 90)            // 4:3
+
+        let confined = CropMath.defaultCrop(imageSize: wide,
+                                            aspect: wideAspect,
+                                            allowsOverscan: false)
+        expect("默认框（关）宽", confined.width, 0.75, tolerance: 1e-9)
+        expect("默认框（关）高", confined.height, 1)
+        expect("默认框（关）x", confined.minX, 0.125, tolerance: 1e-9)
+        expect("默认框（关）y", confined.minY, 0)
+
+        let contained = CropMath.defaultCrop(imageSize: wide,
+                                             aspect: wideAspect,
+                                             allowsOverscan: true)
+        expect("默认框（开）宽", contained.width, 1)
+        expect("默认框（开）高", contained.height, 4.0 / 3.0, tolerance: 1e-9)
+        expect("默认框（开）x", contained.minX, 0)
+        expect("默认框（开）y", contained.minY, -1.0 / 6.0, tolerance: 1e-9)
+
+        /* 开关对 3:4 同样生效：16:9 图上完整包住整图（左右白边） */
+        let portraitAspect = CropMath.frameAspect(rotate: 0)
+        let portraitContain = CropMath.defaultCrop(imageSize: wide,
+                                                   aspect: portraitAspect,
+                                                   allowsOverscan: true)
+        expect("3:4 默认框（开）宽", portraitContain.width, 1)
+        expect("3:4 默认框（开）高", portraitContain.height,
+               (16.0 / 9.0) / portraitAspect, tolerance: 1e-9)
+
+        /* 旋转后仍是“完整包住整图”，并且落到面板上是 3:4 */
+        let rotatedContain = CropMath.rotated(contained, rotate: 90)
+        let rotatedSize = CGSize(width: wide.height, height: wide.width)
+        let containDirect = CropMath.centeredContain(imageSize: rotatedSize,
+                                                     aspect: CropMath.panelAspect)
+        expect("白边框旋转映射 x", rotatedContain.minX, containDirect.minX, tolerance: 1e-9)
+        expect("白边框旋转映射 y", rotatedContain.minY, containDirect.minY, tolerance: 1e-9)
+        expect("白边框旋转映射 w", rotatedContain.width, containDirect.width, tolerance: 1e-9)
+        expect("白边框旋转映射 h", rotatedContain.height, containDirect.height, tolerance: 1e-9)
+        let mappedPx = CropMath.pixelSize(rotatedContain, imageSize: rotatedSize)
+        expect("白边框上屏比例", mappedPx.width / mappedPx.height,
+               CropMath.panelAspect, tolerance: 1e-9)
+
+        /* 编辑器限制：不能超过“完整包住整图”的框，且至少保留一点重叠 */
+        let clamped = CropMath.constrainedOverscan(CGRect(x: 0.9, y: 0.9, width: 1, height: 1),
+                                                   imageSize: wide, aspect: wideAspect)
+        expect("限制后仍在框内", clamped.maxX <= contained.maxX + 1e-9 ? 1 : 0, 1)
+        expect("限制后仍有重叠", clamped.maxY >= CropMath.minOverlap - 1e-9 ? 1 : 0, 1)
+
+        /* 5) 端到端：开关打开时面板左右是白边；关掉时同样的越界框会被收回画面内 */
+        if let red = solidImage(width: 1600, height: 900,
+                                color: CGColor(red: 1, green: 0, blue: 0, alpha: 1)) {
+            var settings = ConvertSettings()
+            settings.rotate = 90
+            settings.fit = .cover
+            settings.dither = .none
+
+            do {
+                settings.allowOverscan = true
+                let result = try ImageConverter.convert(cgImage: red,
+                                                        settings: settings,
+                                                        crop: rotatedContain)
+                let indices = result.indices
+                let y = 800
+                func index(_ x: Int) -> UInt8 { indices[y * Spectrum6.width + x] }
+                expect("白边左", CGFloat(index(40)), 0)
+                expect("白边右", CGFloat(index(Spectrum6.width - 40)), 0)
+                expect("中间仍是原图", CGFloat(index(600)), 2)
+
+                settings.allowOverscan = false
+                let confinedResult = try ImageConverter.convert(cgImage: red,
+                                                                settings: settings,
+                                                                crop: rotatedContain)
+                let confinedIndices = confinedResult.indices
+                func confinedIndex(_ x: Int) -> UInt8 {
+                    confinedIndices[y * Spectrum6.width + x]
+                }
+                expect("关掉后左角仍是原图", CGFloat(confinedIndex(40)), 2)
+                expect("关掉后右角仍是原图", CGFloat(confinedIndex(Spectrum6.width - 40)), 2)
+            } catch {
+                failures += 1
+                print("失败 白边填充：\(error.localizedDescription)")
+            }
+        } else {
+            failures += 1
+            print("失败 白边填充：无法生成测试图")
+        }
+
         if failures > 0 {
             fail("裁切几何自检失败 \(failures) 项")
         }
         print("裁切几何自检全部通过")
+    }
+
+    /// 生成纯色测试图（自检用）
+    private static func solidImage(width: Int, height: Int, color: CGColor) -> CGImage? {
+        guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+              let ctx = CGContext(data: nil,
+                                  width: width,
+                                  height: height,
+                                  bitsPerComponent: 8,
+                                  bytesPerRow: 0,
+                                  space: space,
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return nil }
+        ctx.setFillColor(color)
+        ctx.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        return ctx.makeImage()
     }
 
     private static func oneClickSelftest(_ args: [String]) {
@@ -337,18 +443,19 @@ enum CLI {
 
     private static func renderCrop(_ args: [String]) {
         guard args.count >= 2 else {
-            fail("用法：--render-crop <in> <out.png> [宽 高] [rotate]")
+            fail("用法：--render-crop <in> <out.png> [宽 高] [rotate] [overscan 1|0]")
         }
         let width = args.count >= 4 ? CGFloat(Double(args[2]) ?? 520) : 520
         let height = args.count >= 4 ? CGFloat(Double(args[3]) ?? 640) : 640
         let rotate = args.count >= 5 ? (Int(args[4]) ?? 0) : 0
+        let overscan = args.count >= 6 ? (Int(args[5]) ?? 0) != 0 : false
 
         if #available(macOS 14.0, *) {
             do {
                 try MainActor.assumeIsolated {
                     try DevRender.renderCrop(imagePath: args[0], output: args[1],
                                              width: width, height: height,
-                                             rotate: rotate)
+                                             rotate: rotate, overscan: overscan)
                 }
             } catch {
                 fail(error.localizedDescription)

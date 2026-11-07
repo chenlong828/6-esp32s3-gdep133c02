@@ -101,7 +101,7 @@ struct ControlPane: View {
     // MARK: ③ 画面
 
     private var lookCard: some View {
-        SectionCard("③ 画面", subtitle: "裁切框随旋转切换 3:4 / 4:3") {
+        SectionCard("③ 画面", subtitle: "裁切框随旋转切换 3:4 / 4:3，可开白边扩展") {
             HStack(spacing: 8) {
                 Text("旋转")
                     .font(.caption)
@@ -139,7 +139,16 @@ struct ControlPane: View {
                 .foregroundStyle(.tertiary)
 
             if model.settings.fit == .cover {
-                Text("在左侧拖框内移动、拖四角缩放；框固定为面板比例，旋转后自动重置。")
+                Toggle(isOn: $model.settings.allowOverscan) {
+                    Text("允许裁切框超出原图（空白填白）")
+                        .font(.caption)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.small)
+
+                Text(model.settings.allowOverscan
+                     ? "在左侧拖框内移动、拖四角缩放；框最多到“完整包住整图”，超出部分自动填白。"
+                     : "在左侧拖框内移动、拖四角缩放；框只能落在原图范围内。")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }

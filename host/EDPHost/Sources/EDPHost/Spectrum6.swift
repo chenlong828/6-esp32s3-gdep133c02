@@ -89,6 +89,8 @@ struct ConvertSettings: Equatable {
     var fit: FitMode = .cover
     var dither: DitherMode = .fsSer
     var strength: Double = 1.0
+    /// 裁切框允许超出原图（空白填白）；关掉时裁切框只能落在画面内
+    var allowOverscan: Bool = false
 }
 
 // MARK: - 抖动

@@ -157,8 +157,14 @@ enum ImageConverter {
 
         switch settings.fit {
         case .cover:
-            let rect = CropMath.sanitized(crop ?? CropMath.centeredMax(imageSize: imageSize),
-                                          imageSize: imageSize)
+            /* 打开「允许超出原图」时框可以超出画面，超出的地方保持画布的白底 */
+            let overscan = settings.allowOverscan
+            let fallback = CropMath.defaultCrop(imageSize: imageSize,
+                                                aspect: CropMath.panelAspect,
+                                                allowsOverscan: overscan)
+            let rect = CropMath.sanitized(crop ?? fallback,
+                                          imageSize: imageSize,
+                                          allowsOverscan: overscan)
             let cropPx = CGRect(x: rect.minX * srcW,
                                 y: rect.minY * srcH,
                                 width: rect.width * srcW,

@@ -35,15 +35,16 @@ final class AppModel: ObservableObject {
     @Published var previewMode: PreviewMode = .crop
     @Published var editImage: CGImage?
     @Published var editImageSize = CGSize.zero
-    /// 归一化裁切框（相对旋转后的源图，0…1）
+    /// 归一化裁切框（相对未旋转的源图；开启「允许超出原图」时可以超出 0…1，超出的部分填白）
     @Published var cropRect = CGRect(x: 0, y: 0, width: 1, height: 1)
 
     @Published var settings = ConvertSettings() {
         didSet {
             guard oldValue != settings else { return }
             persistSettings()
-            if oldValue.rotate != settings.rotate {
-                /* 3:4 ↔ 4:3 切换后，把裁切框重置成新比例下的居中最大 */
+            if oldValue.rotate != settings.rotate
+                || oldValue.allowOverscan != settings.allowOverscan {
+                /* 换比例 / 换裁切范围后，把裁切框重置成当前模式的默认 */
                 resetCropForRotation()
             }
             scheduleReconvert()
@@ -279,7 +280,9 @@ final class AppModel: ObservableObject {
 
     private func resetCropForRotation() {
         guard editImageSize.width > 0 else { return }
-        cropRect = CropMath.centeredMax(imageSize: editImageSize, aspect: frameAspect)
+        cropRect = CropMath.defaultCrop(imageSize: editImageSize,
+                                        aspect: frameAspect,
+                                        allowsOverscan: settings.allowOverscan)
     }
 
     func clearImage() {
@@ -398,9 +401,12 @@ final class AppModel: ObservableObject {
 
         let px = CropMath.pixelSize(cropRect, imageSize: editImageSize)
         let ratio = abs(frameAspect - CropMath.panelAspect) < 0.001 ? "3:4" : "4:3"
+        let overflow = cropRect.minX < -0.0001 || cropRect.minY < -0.0001
+            || cropRect.maxX > 1.0001 || cropRect.maxY > 1.0001
+        let padding = overflow ? " · 白边" : ""
         let degrees = ((settings.rotate % 360) + 360) % 360
         let suffix = degrees == 0 ? "" : " · 上屏顺时针转 \(degrees)°"
-        return "裁切框 \(ratio) · \(Int(px.width.rounded()))×\(Int(px.height.rounded()))\(suffix)"
+        return "裁切框 \(ratio) · \(Int(px.width.rounded()))×\(Int(px.height.rounded()))\(padding)\(suffix)"
     }
 
     // MARK: 编译
@@ -630,6 +636,7 @@ final class AppModel: ObservableObject {
         defaults.set(settings.fit.rawValue, forKey: "convert.fit")
         defaults.set(settings.dither.rawValue, forKey: "convert.dither")
         defaults.set(settings.strength, forKey: "convert.strength")
+        defaults.set(settings.allowOverscan, forKey: "convert.overscan")
     }
 
     private func loadSettings() {
@@ -648,6 +655,9 @@ final class AppModel: ObservableObject {
         }
         if defaults.object(forKey: "convert.strength") != nil {
             loaded.strength = defaults.double(forKey: "convert.strength")
+        }
+        if defaults.object(forKey: "convert.overscan") != nil {
+            loaded.allowOverscan = defaults.bool(forKey: "convert.overscan")
         }
         /* 直接写字段，不触发 didSet 里的自动重转 */
         settings = loaded

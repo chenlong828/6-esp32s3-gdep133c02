@@ -66,6 +66,7 @@ struct PreviewPane: View {
                 CropEditorView(image: edit,
                                imageSize: model.editImageSize,
                                aspectRatio: model.frameAspect,
+                               allowsOverscan: model.settings.allowOverscan,
                                crop: $model.cropRect,
                                enabled: model.settings.fit == .cover,
                                onCommit: { model.commitCrop() })
@@ -166,8 +167,10 @@ struct PreviewPane: View {
             return "整图模式：不裁切"
         }
         var text = model.cropSummary
-        if model.editImageSize.width > model.editImageSize.height
-            && model.settings.rotate % 180 == 0 {
+        if model.settings.allowOverscan {
+            text += " · 可拖出原图，空白填白"
+        } else if model.editImageSize.width > model.editImageSize.height
+                    && model.settings.rotate % 180 == 0 {
             text += " · 横图可旋转 90° 换成 4:3 框"
         }
         return text

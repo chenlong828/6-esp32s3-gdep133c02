@@ -60,16 +60,19 @@ enum DevRender {
     @MainActor
     static func renderCrop(imagePath: String, output: String,
                            width: CGFloat = 520, height: CGFloat = 640,
-                           rotate: Int = 0) throws {
+                           rotate: Int = 0, overscan: Bool = false) throws {
         let url = URL(fileURLWithPath: imagePath)
         let thumb = try ImageConverter.loadThumbnail(url: url, maxPixel: 2048)
         let size = CGSize(width: thumb.width, height: thumb.height)
         let aspect = CropMath.frameAspect(rotate: rotate)
-        let crop = Binding.constant(CropMath.centeredMax(imageSize: size, aspect: aspect))
+        let crop = Binding.constant(CropMath.defaultCrop(imageSize: size,
+                                                         aspect: aspect,
+                                                         allowsOverscan: overscan))
 
         let view = CropEditorView(image: thumb,
                                   imageSize: size,
                                   aspectRatio: aspect,
+                                  allowsOverscan: overscan,
                                   crop: crop,
                                   enabled: true,
                                   onCommit: {})
