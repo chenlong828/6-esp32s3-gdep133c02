@@ -17,3 +17,10 @@ backups/
 .env
 .env.*
 !.env.example
+
+# SwiftPM 构建目录
+.build/
+host/EDPHost/.swiftpm/
+
+# 本地测试照片（个人素材，不入库；notes 里以相对路径引用）
+images/

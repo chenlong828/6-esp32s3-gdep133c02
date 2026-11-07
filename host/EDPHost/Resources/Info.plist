@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>zh_CN</string>
+    <key>CFBundleExecutable</key>
+    <string>EDPHost</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.chenlong.edphost</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>EDPHost</string>
+    <key>CFBundleDisplayName</key>
+    <string>电子纸传图</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.graphics-design</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <!-- macOS 15+ 本地网络权限：UDP 广播发现会被系统拦截，必须给说明文案 -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>需要在局域网内搜索电子纸设备，并上传图片。</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>GDEP133C02 13.3" E Ink Spectra 6 上位机</string>
+</dict>
+</plist>

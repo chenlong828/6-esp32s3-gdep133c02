@@ -9,7 +9,7 @@ ESP32-S3 驱动佳显（Good Display）**13.3 英寸 E Ink Spectra 6（S6）** �
 |---|---|
 | 面板 | GDEP133C02，13.3"，1200×1600，6 色（黑/白/红/黄/蓝/绿），4bpp，150 PPI，刷新 ~12 s |
 | 驱动 IC | 双 IC（Master/Slave），每颗管 600 列，每行共 600 字节 |
-| 开发板 | 佳显 ESP32-133C02-IL：ESP32-S3R8（16 MB Flash / 8 MB PSRAM），Type-C 原生 USB |
+| 开发板 | 佳显 ESP32-133C02-IL：ESP32-S3R8（16 MB Flash / 8 MB PSRAM），Type-C 原生 USB ｜ 照片见 [`docs/ESP32-133C02-IL_board.jpg`](docs/ESP32-133C02-IL_board.jpg) |
 | 串口 | `/dev/cu.usbmodem1101`（USB-Serial-JTAG，免驱） |
 | 单帧数据量 | 960 000 字节（= 1200×1600/2，每字节 2 像素，高 nibble 在左） |
 
@@ -22,13 +22,18 @@ docs/reference/   官网在线转换器原页面与逆向 JS
 host/           上位机出图工具 e6_convert.py + samples/（示例 bin 与预览图）
 host/sd_bridge.py SD 卡上位机：浏览/校验/上传/下载/递归拉取
 host/discover.py  UDP 广播发现：自动找设备 IP / MAC / 主机名
+host/EDPHost/     Swift 上位机（SwiftUI：发现 / 裁切 / 转换 / 上传，可打包 .app）
+host/epd_client.py 参考客户端（命令行：discover/status/send/upload/history/...）
 firmware/e6_epd/  固件工程（13.3" GDEP133C02，内嵌图开机直刷）
 firmware/sd_bridge/ SD 卡读写/传输固件（FATFS + USB 二进制协议）
 firmware/wifi_check/ WiFi 连通性测试（STA 连接 + DHCP 信息 + ping 网关）
+firmware/jpg2bin_bench/ 设备端 JPG→EPD6BIN 性能测试（SD + TJpgDec + 6 色抖动）
+firmware/epd_server/ 局域网刷屏固件（UDP 发现 + HTTP 传图 + SD 归档 + 面板刷新）
 .env.example     WiFi 凭据模板（复制为 .env 填写；.env 不入库）
 vendor/         厂家原始示例源码（13.3" 参考设计 / 7.09" 双环境版）
 notes/          调研与分析笔记（产品参数、代码分析、出图链路、macOS 环境、板子体检）
-tools/          构建/烧录/备份脚本
+tools/          构建/烧录/备份脚本 + mock_epd_server.py（无硬件联调）
+tools/verify_swift_dither.py  Swift 与 Python 出图逐字节对比
 ```
 
 ## 快速开始
@@ -50,6 +55,30 @@ idf.py -p /dev/cu.usbmodem1101 flash
 ./.venv/bin/python host/e6_convert.py photo.jpg --fit cover --dither fs-ser \
     -o out/photo.bin --header out/photo_image.h --preview out/photo.png
 ```
+
+## 局域网刷屏（完整版固件 + Swift 上位机）
+
+`firmware/epd_server` 把三件事合成一台可用的显示终端：
+
+1. **任务 1**：UDP 3232 广播发现 —— 回自己的 IP / MAC / HTTP 端口；
+2. **任务 2**：HTTP `POST /api/v1/image` 收 960 018 B 的 EPD6BIN，边收边算 CRC，写入 SD 卡按时间戳归档；
+3. **任务 3**：从 SD 读整帧刷到面板（实测 29~30 s），连续上传时只刷最新一张。
+
+```bash
+./tools/epd-server.sh all                        # 编译 + 烧录 + 监视
+./.venv/bin/python host/discover.py              # 找设备
+./.venv/bin/python host/epd_client.py send images/genshin01.jpg   # 转换 + 上传
+cd host/EDPHost && ./build_app.sh release run    # Swift 图形上位机
+```
+
+Swift 上位机启动后自动广播找设备、每 3 s 刷新设备状态；本地选图后在可拖拽的 3:4 / 4:3
+裁切框里调构图（支持横竖图、旋转、等比缩放），点「一键生成并上传」即完成
+转换 → 编译 → HTTP 上传，带六色占比预览，还能回看设备端归档。
+
+- 固件细节、HTTP API、SD 布局、上板测试清单：[`firmware/epd_server/README.md`](firmware/epd_server/README.md)
+- 上位机用法、命令行模式、逐字节验证：[`host/EDPHost/README.md`](host/EDPHost/README.md)
+- 没板子也能联调：[`tools/mock_epd_server.py`](tools/mock_epd_server.py) 起一个假设备，
+  `./.venv/bin/python tools/mock_epd_server.py --port 8080`
 
 ## SD 卡读写 / 导出
 
@@ -100,7 +129,10 @@ I (5002) wifi-check: ping 结果：4/4 回包，min/avg/max = 8/10/14 ms —— 
 - `images.bin` 格式：`"EPD6BIN\0" + u16 w + u16 h + u16 frames + u32 interval_ms + 帧数据`。
 - 出厂固件是厂家 SD 播放版（Arduino 构建，IDF 5.5，2025-07-22），读 `/images.bin`；已整片备份并覆盖为自编 13.3" 固件（见 `notes/backup.md`）。
 - 当前 `firmware/e6_epd` 把 `out/genshin01.bin` 内嵌进固件，开机直接刷屏、不读 SD；换图导出同格式 bin 后重新编译即可。
+- 设备端直接转 JPG：6.6 MP 原图约 **18.2 s**（解码 15.7 s + 抖动 2.5 s）；先把图缩到 1200×1600 再传只要 **4.7 s**。SD 20 MHz 可用，40 MHz 挂载失败。详见 [`notes/jpg2bin-bench.md`](notes/jpg2bin-bench.md)。
 - 6 色无灰阶，中间色靠空间抖动；可辨色约几百种，纯色块观感接近印刷，照片会显颗粒。
+- 局域网刷屏固件只收成品 EPD6BIN（18 B 头 + 960 000 B 帧），先落 SD 再刷屏；
+  `GET /api/v1/status` 里的 `display.busy` / `display.current_name` 可直接判断刷完没有。
 
 ## 大文件策略
 
