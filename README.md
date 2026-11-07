@@ -67,7 +67,7 @@ idf.py -p /dev/cu.usbmodem1101 flash
 ```bash
 ./tools/epd-server.sh all                        # 编译 + 烧录 + 监视
 ./.venv/bin/python host/discover.py              # 找设备
-./.venv/bin/python host/epd_client.py send images/genshin01.jpg   # 转换 + 上传
+./.venv/bin/python host/epd_client.py send 你的照片.jpg            # 转换 + 上传（自备图片）
 cd host/EDPHost && ./build_app.sh release run    # Swift 图形上位机
 ```
 
