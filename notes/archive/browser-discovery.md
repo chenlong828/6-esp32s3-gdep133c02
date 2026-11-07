@@ -70,7 +70,7 @@ Samsung 30+ 支持；Firefox、Safari 截至 2026-10 不支持）。
 
 ### 验收标准
 
-1. 板子连上 clc-wlan 后，macOS 上 `dscacheutil -q host -a name epd-wifi-check.local`
+1. 板子连上 your-ssid 后，macOS 上 `dscacheutil -q host -a name epd-wifi-check.local`
    能解析到设备 IP；
 2. Chrome 打开 `file://.../web/index.html`，3 s 内显示设备 IP/MAC；
 3. 手动输入 IP 的兜底路径可用；
